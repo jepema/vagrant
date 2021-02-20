@@ -1,3 +1,5 @@
+![GitHub last commit](https://img.shields.io/github/last-commit/jepema/vagrant)
+
 # Vagrant for Network Programmability
 
 This Vagrantfile can be used to setup two Cisco Nexus 9000/3000 Virtual Switches.
