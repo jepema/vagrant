@@ -7,11 +7,11 @@
 
 This Vagrantfile can be used to setup two Cisco Nexus 9000/3000 Virtual Switches.
 
-## Known Issues
+## Known Issue
 
 When using any Vagrant version higher than v2.2.9 you will (probably) receive the error below after starting the box for the second time.
 
-```bash
+```diff
 The following SSH command responded with a non-zero exit status.
 Vagrant assumes that this means the command failed!
 
