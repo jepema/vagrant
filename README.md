@@ -22,6 +22,6 @@ Stdout from the command:
 
 
 Stderr from the command:
-
-
 ```
+
+That being said, you still can use/access the boxes you have created.
