@@ -1,0 +1,17 @@
+---
+- name: n9kv-1
+  box: cisco/n9kv703I79
+  cpu: 2
+  memory: 4096
+  console_port: 21023
+  ssh_port: 2122
+  https_port: 4431
+  ip: x.x.x.x
+- name: n9kv-2
+  box: cisco/n9kv703I79
+  cpu: 2
+  memory: 4096
+  console_port: 21023
+  ssh_port: 2122
+  https_port: 4431
+  ip: x.x.x.x
