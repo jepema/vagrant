@@ -1,15 +1,18 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+# Minimum Vagrant and Vagrant API version
+Vagrant.require_version "= 2.2.6"
+VAGRANTFILE_API_VERSION = "2"
+
+# Required modules if any
+require 'yaml'
+
+# Read YAML file
+nodes = YAML.load_file('nodes.yaml')
+
 # Goal - Deploy two nodes with one active link between them
-Vagrant.configure("2") do |config|
-
-  # Base image (Cisco Nexus 9000/3000 Virtual Switch)
-  config.vm.box = "cisco/n9kv703I79"
-
-  # Port forwarding
-  config.vm.network "forwarded_port", guest: 22, host: 2222, auto_correct: true, id: "ssh"
-  config.vm.network "forwarded_port", guest: 443, host: 4433, auto_correct: true, id: "https"
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   # Port eth1/1 connected to vboxnet1 (auto-config not supported)
   config.vm.network :private_network, virtualbox__intnet: "vboxnet1", auto_config: false
@@ -32,14 +35,26 @@ Vagrant.configure("2") do |config|
     v.check_guest_additions = false
   end
 
-  # Loop over each VM to apply node specific settings 
-  (1..2).each do |i|
-    config.vm.define "n9kv-#{i}" do |node|
-      node.vm.provider "virtualbox" do |v|
-        v.name = "n9kv-#{i}"
-        v.customize ["modifyvm", :id, "--uartmode1", "tcpserver", "2#{i}023"]
+  # Iterate through entries in YAML file
+  nodes.each do |nodes|
+    config.vm.define nodes["name"] do |node|
+      node.vm.box = nodes["box"]
+      # node.vm.network "private_network", ip: servers["ip"]
+
+    # Port forwarding
+    config.vm.network "forwarded_port", guest: 22, host: nodes["ssh_port"], auto_correct: true, id: "ssh"
+    config.vm.network "forwarded_port", guest: 443, host: nodes["https_port"], auto_correct: true, id: "https"
+
+      # Generic VM settings
+      node.vm.provider :virtualbox do |vb|
+        vb.name = nodes["name"]
+        # vb.cpus = nodes["cpu"]
+        # vb.memory = servers["memory"]
+        vb.customize ["modifyvm", :id, "--uartmode1", "tcpserver", nodes["console_port"]]
       end
+
     end
+
   end
 
 end
